@@ -17,3 +17,13 @@ Route::middleware('auth')->group(function () {
 });
 
 require __DIR__ . '/auth.php';
+
+
+Route::get('/locale/{locale}', function ($locale) {
+    if (!in_array($locale, ['tr', 'en', 'ru'])) {
+        abort(400);
+    }
+    session(['locale' => $locale]);
+    \Illuminate\Support\Facades\App::setLocale($locale);
+    return redirect()->back();
+})->name('locale');

@@ -4,10 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Spatie\Translatable\HasTranslations;
 
 class CmsPage extends Model
 {
-    use HasFactory;
+    use HasFactory, HasTranslations;
 
     protected $fillable = [
         'title',
@@ -33,6 +34,15 @@ class CmsPage extends Model
         'is_published' => 'boolean',
         'published_at' => 'datetime',
     ];
+
+    protected $translatable = [
+        'title',
+        'content',
+        'meta_title',
+        'meta_description',
+        'meta_keywords',
+    ];
+
 
     public function category()
     {

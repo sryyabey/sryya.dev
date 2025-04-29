@@ -92,34 +92,62 @@
         </button>
         <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
             <ul class="navbar-nav">
-                <li class="nav-item"><a class="nav-link" href="#about">About</a></li>
-                <li class="nav-item"><a class="nav-link" href="#projects">Projects</a></li>
-                <li class="nav-item"><a class="nav-link" href="#contact">Contact</a></li>
+                <li class="nav-item"><a class="nav-link" href="#about">
+                    {{ __('panel.navbar.about') }}
+                </a></li>
+                <li class="nav-item"><a class="nav-link" href="#projects">
+                    {{ __('panel.navbar.projects') }}
+                </a></li>
+                <li class="nav-item"><a class="nav-link" href="#contact">
+                    {{ __('panel.navbar.contact') }}
+                    </a></li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="languageDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        {{ app()->getLocale() == 'en' ? '🇬🇧 EN' : (app()->getLocale() == 'tr' ? '🇹🇷 TR' : '🇷🇺 RU') }}
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="languageDropdown">
+                        <li><a class="dropdown-item" href="{{ route('locale', 'en') }}">🇬🇧 EN</a></li>
+                        <li><a class="dropdown-item" href="{{ route('locale', 'tr') }}">🇹🇷 TR</a></li>
+                        <li><a class="dropdown-item" href="{{ route('locale', 'ru') }}">🇷🇺 RU</a></li>
+                    </ul>
+                </li>
             </ul>
         </div>
     </div>
 </nav>
 
 <!-- Hero Section -->
+@php($hero = $pages->where('category.slug', 'hero')->first())
 <section class="hero">
     <div class="container">
-        <h1>We Build Future-Ready Web Platforms</h1>
-        <p>Reliable, scalable, and innovative SaaS and network solutions.</p>
-        <a href="#projects" class="btn btn-gradient btn-lg mt-4">View Projects</a>
+        <h1> {{ $hero->title }} </h1>
+        <p> {!! $hero->content !!}</p>
+        <a href="#projects" class="btn btn-gradient btn-lg mt-4">
+            {{ __('panel.homepage.view_projects') }}
+        </a>
     </div>
 </section>
 
 <!-- About Section -->
+@php($about = $pages->where('category.slug', 'about')->first())
 <section id="about" class="section">
     <div class="container">
         <div class="row align-items-center">
             <div class="col-md-6">
-                <h2 class="fw-bold">About Us</h2>
-                <p>At sryya.dev, we specialize in developing innovative SaaS platforms and network marketing solutions tailored for modern businesses. We focus on building scalable, efficient, and user-centric web applications to help our clients succeed.</p>
+                <h2 class="fw-bold">
+                    {{ $about->title }}
+                </h2>
+                <p>
+                    {!! $about->content !!}
+                </p>
             </div>
             <div class="col-md-6">
-                <img src="https://via.placeholder.com/500x400?text=Team+Work" alt="About Image" class="img-fluid rounded">
-            </div>
+                @if ($about->image)
+                    <img src="{{ asset('storage/' . $about->image) }}" alt="About Image" class="img-fluid rounded">
+                @else
+                    <img src="https://via.placeholder.com/500x400?text=About+Image" alt="About Image" width="100px" class="img-fluid rounded">
+                @endif
+           </div>
         </div>
     </div>
 </section>
@@ -132,26 +160,44 @@
             <p class="text-muted">Solutions we have built for the digital age.</p>
         </div>
         <div class="row g-4">
+            @php($projects = $pages->where('category.slug', 'projects'))
+            @forelse ($projects as $project )
+            <div class="col-md-6">
+                <div class="card h-100">
+                    @if ($project->image)
+                        <img src="{{ asset('storage/' . $project->image) }}" class="card-img-top img-fluid" alt="{{ $project->title }}" style="max-height: 150px; object-fit: cover;">
+                    @else
+                        <img src="https://via.placeholder.com/600x300?text=Project+Image" class="card-img-top" alt="{{ $project->title }}">
+                    @endif
+                   <div class="card-body">
+                        <h5 class="card-title">
+                            {{ $project->title }}
+                        </h5>
+                        <p class="card-text">
+                            {!! $project->content !!}
+                        </p>
+                        <a href="{{ $project->tags }}" class="btn btn-gradient">
+                            {{ __('panel.homepage.view_projects') }}
+                        </a>
+                    </div>
+                </div>
+            </div>
+            @empty
             <div class="col-md-6">
                 <div class="card h-100">
                     <img src="https://via.placeholder.com/600x300?text=bagla.app" class="card-img-top" alt="bagla.app">
                     <div class="card-body">
                         <h5 class="card-title">Bagla.app</h5>
                         <p class="card-text">A smart bio link platform offering customizable links, analytics, and engagement tools for content creators and businesses.</p>
-                        <a href="#" class="btn btn-gradient">View Project</a>
+                        <a href="#" class="btn btn-gradient">
+                            {{ __('panel.homepage.view_projects') }}
+                        </a>
                     </div>
                 </div>
             </div>
-            <div class="col-md-6">
-                <div class="card h-100">
-                    <img src="https://via.placeholder.com/600x300?text=onlyMLM" class="card-img-top" alt="onlyMLM">
-                    <div class="card-body">
-                        <h5 class="card-title">OnlyMLM</h5>
-                        <p class="card-text">An enterprise-grade MLM & binary network marketing SaaS platform integrated with e-commerce systems and automated financial tracking.</p>
-                        <a href="#" class="btn btn-gradient">View Project</a>
-                    </div>
-                </div>
-            </div>
+            @endforelse
+
+
         </div>
     </div>
 </section>
@@ -159,17 +205,25 @@
 <!-- Call to Action -->
 <section class="section text-center">
     <div class="container">
-        <h2 class="fw-bold">Let’s build something amazing together.</h2>
-        <p class="text-muted">Contact us to discuss your next big idea or project.</p>
-        <a href="#contact" class="btn btn-gradient btn-lg mt-3">Contact Us</a>
+        <h2 class="fw-bold">
+            {{ __('panel.homepage.lets_build') }}
+        </h2>
+        <p class="text-muted">
+            {{ __('panel.homepage.contact_us_title') }}
+        </p>
+        <a href="#contact" class="btn btn-gradient btn-lg mt-3">
+            {{ __('panel.homepage.contact_us_button') }}
+        </a>
     </div>
 </section>
 
 <!-- Contact Section -->
 <section id="contact" class="section bg-white">
     <div class="container text-center">
-        <h2 class="fw-bold mb-4">Contact Us</h2>
-        <p class="text-muted">Reach us via email: <a href="mailto:info@sryya.dev">info@sryya.dev</a></p>
+        <h2 class="fw-bold mb-4">
+            {{ __('panel.homepage.contact_us') }}
+        </h2>
+        <p class="text-muted"> <a href="mailto:info@sryya.dev">info@sryya.dev</a></p>
     </div>
 </section>
 

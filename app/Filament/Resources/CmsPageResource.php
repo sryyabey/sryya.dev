@@ -3,18 +3,20 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\CmsPageResource\Pages;
-use App\Filament\Resources\CmsPageResource\RelationManagers;
 use App\Models\CmsPage;
 use Filament\Forms;
+use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\RichEditor;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Filament\Resources\Concerns\Translatable;
 
 class CmsPageResource extends Resource
 {
+    use Translatable;
     protected static ?string $model = CmsPage::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-book-open';
@@ -31,19 +33,32 @@ class CmsPageResource extends Resource
                 Forms\Components\TextInput::make('slug')
                     ->required()
                     ->maxLength(255),
-                Forms\Components\Textarea::make('content')
+                RichEditor::make('content')
                     ->columnSpanFull(),
-                Forms\Components\Textarea::make('image')
-                    ->columnSpanFull(),
+                FileUpload::make('image')
+                    ->label('İmage Upload')
+                    ->required()
+                    ->disk('public')
+                    ->directory('web')
+                    ->preserveFilenames()
+                    ->enableOpen()
+                    ->enableDownload()
+                    ->acceptedFileTypes(['application/pdf', 'image/png', 'image/jpeg'])
+                    ->maxSize(4048)
+                    ->columnSpanFull()
+                    ->optimize('webp'),
                 Forms\Components\Textarea::make('meta_title')
                     ->columnSpanFull(),
                 Forms\Components\Textarea::make('meta_description')
                     ->columnSpanFull(),
                 Forms\Components\Textarea::make('meta_keywords')
                     ->columnSpanFull(),
-                Forms\Components\TextInput::make('category_id')
+                Select::make('category_id')
+                    ->relationship('category', 'name')
                     ->required()
-                    ->numeric(),
+                    ->searchable()
+                    ->preload()
+                    ->columnSpanFull(),
                 Forms\Components\Textarea::make('tags')
                     ->columnSpanFull(),
                 Forms\Components\Toggle::make('is_published')
