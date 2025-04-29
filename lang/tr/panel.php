@@ -15,5 +15,7 @@ return [
         'contact_us_title' => 'Bize ulaşın, bir sonraki büyük fikrinizi veya projenizi tartışalım.',
         'contact_us_button' => 'Bize Ulaşın',
         'contact_us' => 'Bize Ulaşın',
+        'our_projects' => 'Projelerimiz',
+        'our_projects_title' => 'Dijital Çağ için Oluşturduğumuz Çözümler.',
     ]
 ];

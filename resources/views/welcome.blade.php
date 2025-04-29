@@ -120,8 +120,8 @@
 @php($hero = $pages->where('category.slug', 'hero')->first())
 <section class="hero">
     <div class="container">
-        <h1> {{ $hero->title }} </h1>
-        <p> {!! $hero->content !!}</p>
+        <h1> {{ $hero->title ?? '' }} </h1>
+        <p> {!! $hero->content ?? '' !!}</p>
         <a href="#projects" class="btn btn-gradient btn-lg mt-4">
             {{ __('panel.homepage.view_projects') }}
         </a>
@@ -135,10 +135,10 @@
         <div class="row align-items-center">
             <div class="col-md-6">
                 <h2 class="fw-bold">
-                    {{ $about->title }}
+                    {{ $about->title ?? '' }}
                 </h2>
                 <p>
-                    {!! $about->content !!}
+                    {!! $about->content ?? '' !!}
                 </p>
             </div>
             <div class="col-md-6">
@@ -156,27 +156,35 @@
 <section id="projects" class="section bg-white">
     <div class="container">
         <div class="text-center mb-5">
-            <h2 class="fw-bold">Our Projects</h2>
-            <p class="text-muted">Solutions we have built for the digital age.</p>
+            <h2 class="fw-bold">
+                {{ __('panel.homepage.our_projects') }}
+            </h2>
+            <p class="text-muted">
+                {{ __('panel.homepage.our_projects_title') }}
+            </p>
         </div>
         <div class="row g-4">
             @php($projects = $pages->where('category.slug', 'projects'))
             @forelse ($projects as $project )
             <div class="col-md-6">
                 <div class="card h-100">
-                    @if ($project->image)
-                        <img src="{{ asset('storage/' . $project->image) }}" class="card-img-top img-fluid" alt="{{ $project->title }}" style="max-height: 150px; object-fit: cover;">
+                   @if ($project->image)
+                        <div style="border: 2px solid #e2e8f0; border-radius: 12px; overflow: hidden; padding: 5px;">
+                            <img src="{{ asset('storage/' . $project->image) }}" class="" alt="{{ $project->title ?? 'Project Image' }}" style="max-height: 100px; object-fit: cover;">
+                        </div>
                     @else
-                        <img src="https://via.placeholder.com/600x300?text=Project+Image" class="card-img-top" alt="{{ $project->title }}">
+                        <div style="border: 2px solid #e2e8f0; border-radius: 12px; overflow: hidden; padding: 5px;">
+                            <img src="https://via.placeholder.com/600x300?text=Project+Image" class="card-img-top" alt="{{ $project->title ?? 'Project Image' }}" style="max-height: 120px; object-fit: cover;">
+                        </div>
                     @endif
                    <div class="card-body">
                         <h5 class="card-title">
-                            {{ $project->title }}
+                            {{ $project->title ?? '' }}
                         </h5>
                         <p class="card-text">
-                            {!! $project->content !!}
+                            {!! $project->content ?? '' !!}
                         </p>
-                        <a href="{{ $project->tags }}" class="btn btn-gradient">
+                        <a href="{{ $project->tags ?? '#' }}" class="btn btn-gradient">
                             {{ __('panel.homepage.view_projects') }}
                         </a>
                     </div>
