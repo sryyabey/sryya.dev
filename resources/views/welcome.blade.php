@@ -231,7 +231,7 @@
         <h2 class="fw-bold mb-4">
             {{ __('panel.homepage.contact_us') }}
         </h2>
-        <p class="text-muted"> <a href="mailto:info@sryya.dev">info@sryya.dev</a></p>
+        <p class="text-muted"> <a href="mailto:sryyadev@gmail.com">sryyadev@gmail.com</a></p>
     </div>
 </section>
 
